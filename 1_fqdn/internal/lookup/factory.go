@@ -8,14 +8,20 @@ import (
 	"github.com/miekg/dns"
 )
 
+type DnsType int
+
+const  (
+	 typeA     DnsType = 1
+	 typeCName DnsType = 2
+	)
 
 //https://www.sohamkamani.com/blog/golang/2018-06-20-golang-factory-patterns/
 //function factory
-func Factory(dnsType uint16) func(host, dnsAddr string) ([]string, error) {
+func factory(dnsType DnsType) func(host, dnsAddr string) ([]string, error) {
 	switch dnsType {
-	case dns.TypeA:
+	case typeA:
 		return lookupA
-	case dns.TypeCNAME:
+	case typeCName:
 		return lookupCName
 	default:
 		guard.FailOnError(errors.New(""),"not implemented factory for such dns type")
@@ -23,7 +29,10 @@ func Factory(dnsType uint16) func(host, dnsAddr string) ([]string, error) {
 	return nil
 }
 
+
 //ulozto.cz,8.8.8.8:53
+//returns list of ip address
+//for (52.157.177.204, 8.8.8.8:53) retuns (onho.cz,nil)
 func lookupA(host, dnsAddr string) ([]string, error){
 	var msg dns.Msg
 	var ips []string
@@ -45,6 +54,8 @@ func lookupA(host, dnsAddr string) ([]string, error){
 	return ips,nil
 }
 
+//returns list of hostnames
+//for (blah.onho.cz, 8.8.8.8:53) retuns (onho.cz,nil)
 func lookupCName(host, dnsAddr string) ([]string, error){
 	var msg dns.Msg
 	var fqdns []string

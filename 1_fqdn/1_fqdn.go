@@ -21,14 +21,10 @@ import (
 	"flag"
 	"fmt"
 	"github.com/kuritka/dns/1_fqdn/internal/lookup"
-	"github.com/miekg/dns"
-
+	"github.com/kuritka/gext/guard"
 	"github.com/kuritka/gext/log"
 )
 
-type result struct {
-
-}
 
 var logger = log.Log
 
@@ -42,14 +38,14 @@ var (
 
 
 func main() {
-
+	flag.Parse()
 	if *fDomain == "" || *fWordList=="" {
 		logger.Fatal().Msgf("-domain and -wordlist required")
 	}
 
-	f := lookup.Factory(dns.TypeA)
-	x,_ := f("ulozto.cz","8.8.8.8:53")
-	for a := range x {
-		fmt.Println(a)
+	x, err := lookup.Lookup(*fDomain,"8.8.8.8:53")
+	guard.FailOnError(err,"domain: %s",*fDomain)
+	for _,a := range x {
+		fmt.Println(a.ToString())
 	}
 }
