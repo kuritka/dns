@@ -4,10 +4,9 @@ import "fmt"
 
 type Result struct {
 	IPAddr string
-	Host string
+	Host   string
 }
 
-
-func (r *Result) ToString() string{
+func (r *Result) ToString() string {
 	return fmt.Sprintf("%s %s", r.IPAddr, r.Host)
 }

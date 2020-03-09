@@ -10,10 +10,10 @@ import (
 
 type DnsType int
 
-const  (
-	 typeA     DnsType = 1
-	 typeCName DnsType = 2
-	)
+const (
+	typeA     DnsType = 1
+	typeCName DnsType = 2
+)
 
 //https://www.sohamkamani.com/blog/golang/2018-06-20-golang-factory-patterns/
 //function factory
@@ -24,16 +24,15 @@ func factory(dnsType DnsType) func(host, dnsAddr string) ([]string, error) {
 	case typeCName:
 		return lookupCName
 	default:
-		guard.FailOnError(errors.New(""),"not implemented factory for such dns type")
+		guard.FailOnError(errors.New(""), "not implemented factory for such dns type")
 	}
 	return nil
 }
 
-
 //ulozto.cz,8.8.8.8:53
 //returns list of ip address
 //for (52.157.177.204, 8.8.8.8:53) retuns (onho.cz,nil)
-func lookupA(host, dnsAddr string) ([]string, error){
+func lookupA(host, dnsAddr string) ([]string, error) {
 	var msg dns.Msg
 	var ips []string
 	fqdn := dns.Fqdn(host)
@@ -44,19 +43,19 @@ func lookupA(host, dnsAddr string) ([]string, error){
 		return ips, err
 	}
 	if len(in.Answer) < 1 {
-		return ips,  errors.New("no answer")
+		return ips, errors.New("no answer")
 	}
 	for _, answer := range in.Answer {
 		if a, ok := answer.(*dns.A); ok {
-			ips = append(ips,a.A.String())
+			ips = append(ips, a.A.String())
 		}
 	}
-	return ips,nil
+	return ips, nil
 }
 
 //returns list of hostnames
 //for (blah.onho.cz, 8.8.8.8:53) retuns (onho.cz,nil)
-func lookupCName(host, dnsAddr string) ([]string, error){
+func lookupCName(host, dnsAddr string) ([]string, error) {
 	var msg dns.Msg
 	var fqdns []string
 	fqdn := dns.Fqdn(host)
@@ -67,12 +66,12 @@ func lookupCName(host, dnsAddr string) ([]string, error){
 		return fqdns, err
 	}
 	if len(in.Answer) < 1 {
-		return fqdns,  errors.New("no answer")
+		return fqdns, errors.New("no answer")
 	}
 	for _, answer := range in.Answer {
 		if c, ok := answer.(*dns.CNAME); ok {
-			fqdns = append(fqdns,c.Target)
+			fqdns = append(fqdns, c.Target)
 		}
 	}
-	return fqdns,nil
+	return fqdns, nil
 }
