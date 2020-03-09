@@ -1,34 +1,5 @@
-///*
-//package tests main DNS functionality
-//Before you run, find your ethernet interface by call
-//
-//`ifconfig -a`
-//
-//Normally it is eth0 but sometimes it could be something else i.e. ens4u1
-//
-//Than listen on port :53 by calling
-//
-//1sudo tcpdump -i ens4u1 -n udp port 53`
-//
-//goes from my ip to top google dns and
-//16:07:05.464049 IP 192.168.0.123.50179 > 8.8.8.8.domain: 29435+ A? ulozto.cz. (27)
-//goes back with A record of ulozto.cz
-//16:07:05.482307 IP 8.8.8.8.domain > 192.168.0.123.50179: 29435 1/0/0 A 77.48.29.200 (43)
-//
-//
-//https://github.com/kuritka/threading/blob/master/c_promises/main.go
-//
-//output:
-//Logger configured
-//checking dns
-//52.157.177.204 asterix.onho.cz
-//137.117.240.153 dev.onho.cz
-//51.145.247.10 hello.onho.cz
-//52.157.177.204 ne.onho.cz
-//137.117.240.153 dev.onho.cz
-//52.157.177.204 ne.onho.cz
-//52.157.177.204 httpbin.onho.cz
-//
+//I realized one think here: you must block main thread when till  promise ends . Which brings another complexity
+//You open at  one thread per promise, one thread per record  and promise often timeouts in this case ! (15s )was not enough in some runs
 //execution time 17.387858418s
 //*/
 //
